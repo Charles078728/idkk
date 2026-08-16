@@ -20,16 +20,10 @@
 /super          emmc    /dev/block/by-name/super             flags=display="Super"
 
 # These are logical partitions inside super — TWRP handles them via dm-linear
-/system         ext4    /dev/block/mapper/system             flags=slotselect;logical
-/vendor         ext4    /dev/block/mapper/vendor             flags=slotselect;logical
-/product        ext4    /dev/block/mapper/product            flags=slotselect;logical
-/odm            ext4    /dev/block/mapper/odm                flags=slotselect;logical
-
-# ─── Userdata ────────────────────────────────────────────────────────────────
-# [VERIFY] block path — common MT6761 paths are:
-#   /dev/block/by-name/userdata   OR
-#   /dev/block/mmcblk0p<N>
-/data           f2fs    /dev/block/by-name/userdata          flags=fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized;keydirectory=/metadata/vold/metadata_encryption;quota;latemount
+/system         ext4    /dev/block/mapper/system             flags=backup=1;flashimg=1;slotselect
+/vendor         ext4    /dev/block/mapper/vendor             flags=backup=1;flashimg=1;slotselect
+/product        ext4    /dev/block/mapper/product            flags=backup=1;flashimg=1;slotselect
+/system_ext            ext4    /dev/block/mapper/odm                flags=backup=1;flashimg=1;slotselect
 
 # ─── Metadata (required for FBE/metadata decrypt) ────────────────────────────
 /metadata       ext4    /dev/block/by-name/md_udc            flags=display="Metadata";formattable;wipeingui;first_stage_mount
