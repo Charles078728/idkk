@@ -158,9 +158,11 @@ jobs:
         cd android-recovery
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        lunch ${{ env.DEVICE_MAKEFILE }}-eng && make clean && make ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all)
+        lunch ${{ env.DEVICE_MAKEFILE }}-eng
+        make clean
+        make ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all) 2>&1 | tee build.log
         echo "Done building your ${{ github.event.inputs.BUILD_TARGET }}.img"
-      continue-on-error: true
+       continue-on-error: true
       
     - name: Set Build Date # Output will be use in Release
       run: |
