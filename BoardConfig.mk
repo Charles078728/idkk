@@ -3,7 +3,7 @@
 # SoC  : MediaTek MT6761 (Helio A22)
 # TWRP device tree — fill in values marked [VERIFY] from your stock firmware
 
-LOCAL_PATH := device/tecno/BF7
+DEVICE_PATH := device/tecno/BF7
 
 # ─── Architecture ───────────────────────────────────────────────────────────
 TARGET_ARCH         := arm64
@@ -29,9 +29,9 @@ TARGET_BOARD_PLATFORM_GPU     := mali-g52
 # ─── Kernel (prebuilt) ──────────────────────────────────────────────────────
 # Extract from stock boot.img with: magiskboot unpack boot.img
 # Then copy kernel → prebuilt/kernel
-TARGET_PREBUILT_KERNEL                := $(LOCAL_PATH)/prebuilt/kernel
-TARGET_PREBUILT_DTB                   := $(LOCAL_PATH)/prebuilt/dtb.img   # [VERIFY] may be inside boot.img
-BOARD_PREBUILT_DTBOIMAGE              := $(LOCAL_PATH)/prebuilt/dtbo.img  # [VERIFY]
+TARGET_PREBUILT_KERNEL                := $(DEVICE_PATH)/prebuilt/kernel
+TARGET_PREBUILT_DTB                   := $(DEVICE_PATH)/prebuilt/dtb.img   # [VERIFY] may be inside boot.img
+BOARD_PREBUILT_DTBOIMAGE              := $(DEVICE_PATH)/prebuilt/dtbo.img  # [VERIFY]
 
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 buildvariant=user
 
@@ -73,7 +73,7 @@ BOARD_BOOTIMAGE_PARTITION_SIZE        := 33554432  # 96 MiB — [VERIFY]
 
 # ─── Recovery ───────────────────────────────────────────────────────────────
 # Ramdisk is in vendor_boot on GKI devices; set accordingly
-TARGET_RECOVERY_FSTAB           := $(LOCAL_PATH)/recovery/root/system/etc/recovery.fstab
+TARGET_RECOVERY_FSTAB           := $(DEVICE_PATH)/recovery/root/system/etc/recovery.fstab
 BOARD_USES_RECOVERY_AS_BOOT     := true  # [VERIFY] — true if no separate recovery partition
 TARGET_NO_RECOVERY          := true
 
