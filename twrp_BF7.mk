@@ -2,11 +2,11 @@
 
 # Inherit from TWRP base
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
-$(call inherit-product, vendor/omni/config/common.mk)
+$(call inherit-product, vendor/twrp/config/common.mk)
 
 # Device identifier
-PRODUCT_DEVICE   := TECNO-BF7
-PRODUCT_NAME     := omni_TECNO-BF7
+PRODUCT_DEVICE   := BF7
+PRODUCT_NAME     := twrp_BF7
 PRODUCT_BRAND    := Tecno
 PRODUCT_MODEL    := TECNO BF7
 PRODUCT_MANUFACTURER := TECNO
