@@ -1,0 +1,8 @@
+# twrp.flags — extra partition flags for Tecno BF7
+# These supplement recovery.fstab entries.
+#
+# Only needed if you use a separate twrp.flags file alongside recovery.fstab
+# (some TWRP builds read this; others only use recovery.fstab)
+
+/metadata     ext4    /dev/block/by-name/md_udc    flags=display="Metadata";first_stage_mount
+/super        emmc    /dev/block/by-name/super      flags=display="Super"
