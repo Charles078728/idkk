@@ -8,6 +8,7 @@ $(call inherit-product, vendor/twrp/config/common.mk)
 PRODUCT_DEVICE   := BF7
 PRODUCT_NAME     := twrp_BF7
 PRODUCT_MODEL    := TECNO BF7
+PRODUCT_BRAND := TECNO
 PRODUCT_MANUFACTURER := TECNO
 
 PRODUCT_GMS_CLIENTID_BASE := android-tecno
