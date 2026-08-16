@@ -7,7 +7,6 @@ $(call inherit-product, vendor/twrp/config/common.mk)
 # Device identifier
 PRODUCT_DEVICE   := BF7
 PRODUCT_NAME     := twrp_BF7
-PRODUCT_BRAND    := Tecno
 PRODUCT_MODEL    := TECNO BF7
 PRODUCT_MANUFACTURER := TECNO
 
@@ -19,7 +18,6 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
 
 # Explicitly pull in A/B OTA tools
 AB_OTA_UPDATER := true
-AB_OTA_PARTITIONS := boot vendor_boot system vendor product odm
 
 PRODUCT_PACKAGES += \
     bootctrl.mt6761 \
