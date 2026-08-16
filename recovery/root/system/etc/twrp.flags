@@ -4,5 +4,41 @@
 # Only needed if you use a separate twrp.flags file alongside recovery.fstab
 # (some TWRP builds read this; others only use recovery.fstab)
 
-/metadata     ext4    /dev/block/by-name/md_udc    flags=display="Metadata";first_stage_mount
-/super        emmc    /dev/block/by-name/super      flags=display="Super"
+# TWRP recovery.fstab for Tecno BF7 (MT6761, Android 12, A/B)
+#
+# [VERIFY] all /dev/block/... paths against your device:
+#   adb shell ls -la /dev/block/by-name/
+#
+# Format: <mount_point>  <fs_type>  <device>  [options]  [flags]
+
+# ─── Boot partitions (A/B — no slot suffix needed in TWRP) ───────────────────
+/boot           emmc    /dev/block/by-name/boot              flags=slotselect
+/vendor_boot    emmc    /dev/block/by-name/vendor_boot       flags=slotselect
+/dtbo           emmc    /dev/block/by-name/dtbo              flags=slotselect;display="Dtbo"
+
+# ─── Super / dynamic partitions ──────────────────────────────────────────────
+/super          emmc    /dev/block/by-name/super             flags=display="Super"
+
+# These are logical partitions inside super — TWRP handles them via dm-linear
+/system         ext4    /dev/block/mapper/system             flags=slotselect;logical
+/vendor         ext4    /dev/block/mapper/vendor             flags=slotselect;logical
+/product        ext4    /dev/block/mapper/product            flags=slotselect;logical
+/odm            ext4    /dev/block/mapper/odm                flags=slotselect;logical
+
+# ─── Userdata ────────────────────────────────────────────────────────────────
+# [VERIFY] block path — common MT6761 paths are:
+#   /dev/block/by-name/userdata   OR
+#   /dev/block/mmcblk0p<N>
+/data           f2fs    /dev/block/by-name/userdata          flags=fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized;keydirectory=/metadata/vold/metadata_encryption;quota;latemount
+
+# ─── Metadata (required for FBE/metadata decrypt) ────────────────────────────
+/metadata       ext4    /dev/block/by-name/md_udc            flags=display="Metadata";formattable;wipeingui;first_stage_mount
+# [VERIFY] — may also be /dev/block/by-name/metadata on some MT6761 builds
+
+# ─── Cache / Misc ────────────────────────────────────────────────────────────
+/misc           emmc    /dev/block/by-name/para              flags=display="Misc"
+# [VERIFY] — Tecno/Transsion sometimes uses "para" instead of "misc"
+
+# ─── External storage ────────────────────────────────────────────────────────
+/sdcard1        vfat    /dev/block/mmcblk1p1                 flags=display="MicroSD";storage;wipeingui;removable;fsflags="utf8"
+/usb-otg        vfat    /dev/block/sda1                      flags=display="USB-OTG";storage;wipeingui;removable
