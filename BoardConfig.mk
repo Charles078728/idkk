@@ -35,13 +35,12 @@ BOARD_PREBUILT_DTBOIMAGE              := $(LOCAL_PATH)/prebuilt/dtbo.img  # [VER
 
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 buildvariant=user
 
-BOARD_KERNEL_BASE          := 0x40000000
+BOARD_KERNEL_BASE          := 0x40078000
 BOARD_KERNEL_PAGESIZE      := 2048
 BOARD_KERNEL_OFFSET        := 0x00008000
-BOARD_RAMDISK_OFFSET       := 0x11b00000
-BOARD_KERNEL_SECOND_OFFSET := 0x00f00000
-BOARD_KERNEL_TAGS_OFFSET   := 0x07880000
-BOARD_DTB_OFFSET           := 0x07880000
+BOARD_RAMDISK_OFFSET       := 0x11a88000
+BOARD_KERNEL_TAGS_OFFSET   := 0x07808000
+BOARD_DTB_OFFSET           := 0x07808000
 
 # Confirmed from: magiskboot unpack -h boot.img
 BOARD_KERNEL_IMAGE_NAME    := Image.gz   # KERNEL_FMT=gzip → Image.gz
@@ -61,21 +60,15 @@ BOARD_FLASH_BLOCK_SIZE           := 131072          # 128KB (pagesize * 64)
 
 # A/B (Virtual A/B on MT6761 Android 12 may still use legacy A/B — confirm below)
 AB_OTA_UPDATER      := true
-AB_OTA_PARTITIONS   := boot system vendor product odm
+AB_OTA_PARTITIONS   := boot system vendor product system_ext
 # vendor_boot removed — HEADER_VER=2 confirms non-GKI kernel, no vendor_boot partition
 
 # Dynamic partitions (Android 12 almost certainly uses this)
-BOARD_SUPER_PARTITION_SIZE            := 9126805504   # [VERIFY] typically 3 GiB on BF7
+BOARD_SUPER_PARTITION_SIZE            := 6535634944   # [VERIFY] typically 3 GiB on BF7
 BOARD_SUPER_PARTITION_GROUPS          := main
-BOARD_MAIN_SIZE                       := 9122611200  # super - 4MB overhead
+BOARD_MAIN_SIZE                       := 6531440640     # super - 4MB overhead
 BOARD_MAIN_PARTITION_LIST             := system vendor product system_ext
-
-# Boot sizes
-# Confirmed: KERNEL_SZ=11884933 + RAMDISK_SZ=13413543 + DTB_SZ=121231 + headers ≈ 25.5 MB
-# Stock boot.img on disk = ~34 MB (includes padding to page boundaries)
-# Set to 0x06000000 (96 MiB) to be safe — [VERIFY] real size:
-#   adb shell blockdev --getsize64 /dev/block/by-name/boot
-BOARD_BOOTIMAGE_PARTITION_SIZE        := 0x06000000  # 96 MiB — [VERIFY]
+BOARD_BOOTIMAGE_PARTITION_SIZE        := 33554432  # 96 MiB — [VERIFY]
 # No vendor_boot on HEADER_VER=2 (non-GKI) — remove vendor_boot from AB_OTA_PARTITIONS if confirmed
 
 # ─── Recovery ───────────────────────────────────────────────────────────────
