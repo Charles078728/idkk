@@ -1,38 +1,51 @@
-# twrp.flags — extra partition flags for Tecno BF7
-# These supplement recovery.fstab entries.
-#
-# Only needed if you use a separate twrp.flags file alongside recovery.fstab
-# (some TWRP builds read this; others only use recovery.fstab)
+# twrp.flags for Tecno BF7 (MT6761, Android 12, A/B)
+# Built from stock fstab.mt6761
+# Format: <mount_point>  <fstype>  <device>  flags=<flags>
 
-# TWRP recovery.fstab for Tecno BF7 (MT6761, Android 12, A/B)
-#
-# [VERIFY] all /dev/block/... paths against your device:
-#   adb shell ls -la /dev/block/by-name/
-#
-# Format: <mount_point>  <fs_type>  <device>  [options]  [flags]
-
-# ─── Boot partitions (A/B — no slot suffix needed in TWRP) ───────────────────
-/boot           emmc    /dev/block/by-name/boot              flags=slotselect
-/vendor_boot    emmc    /dev/block/by-name/vendor_boot       flags=slotselect
+# ── Boot ─────────────────────────────────────────────────────────────────────
+/boot           emmc    /dev/block/by-name/boot              flags=slotselect;display="Boot"
 /dtbo           emmc    /dev/block/by-name/dtbo              flags=slotselect;display="Dtbo"
 
-# ─── Super / dynamic partitions ──────────────────────────────────────────────
+# ── Super ────────────────────────────────────────────────────────────────────
 /super          emmc    /dev/block/by-name/super             flags=display="Super"
 
-# These are logical partitions inside super — TWRP handles them via dm-linear
-/system         ext4    /dev/block/mapper/system             flags=backup=1;flashimg=1;slotselect
-/vendor         ext4    /dev/block/mapper/vendor             flags=backup=1;flashimg=1;slotselect
-/product        ext4    /dev/block/mapper/product            flags=backup=1;flashimg=1;slotselect
-/system_ext            ext4    /dev/block/mapper/odm                flags=backup=1;flashimg=1;slotselect
+# ── Logical partitions (inside super) ────────────────────────────────────────
+/system         ext4    /dev/block/mapper/system             flags=slotselect;logical;backup=1;flashimg=1;display="System"
+/system_ext     ext4    /dev/block/mapper/system_ext         flags=slotselect;logical;backup=1;flashimg=1;display="System Ext"
+/vendor         ext4    /dev/block/mapper/vendor             flags=slotselect;logical;backup=1;flashimg=1;display="Vendor"
+/product        ext4    /dev/block/mapper/product            flags=slotselect;logical;backup=1;flashimg=1;display="Product"
 
-# ─── Metadata (required for FBE/metadata decrypt) ────────────────────────────
-/metadata       ext4    /dev/block/by-name/md_udc            flags=display="Metadata";formattable;wipeingui;first_stage_mount
-# [VERIFY] — may also be /dev/block/by-name/metadata on some MT6761 builds
+# ── Metadata ─────────────────────────────────────────────────────────────────
+/metadata       ext4    /dev/block/by-name/md_udc            flags=display="Metadata";first_stage_mount;formattable;wipeingui
 
-# ─── Cache / Misc ────────────────────────────────────────────────────────────
+# ── Userdata ─────────────────────────────────────────────────────────────────
+/data           f2fs    /dev/block/by-name/userdata          flags=display="Data";wipeingui;forceencrypt=/metadata/vold/metadata_encryption
+
+# ── Misc / para ──────────────────────────────────────────────────────────────
 /misc           emmc    /dev/block/by-name/para              flags=display="Misc"
-# [VERIFY] — Tecno/Transsion sometimes uses "para" instead of "misc"
 
-# ─── External storage ────────────────────────────────────────────────────────
+# ── Persist / protect ────────────────────────────────────────────────────────
+/persist        ext4    /dev/block/by-name/persist           flags=display="Persist";backup=1
+/protect_f      ext4    /dev/block/by-name/protect1          flags=display="Protect F";backup=1
+/protect_s      ext4    /dev/block/by-name/protect2          flags=display="Protect S";backup=1
+/nvdata         ext4    /dev/block/by-name/nvdata            flags=display="NVData";backup=1
+/nvcfg          ext4    /dev/block/by-name/nvcfg             flags=display="NVCfg";backup=1
+
+# ── Firmware (flashable) ─────────────────────────────────────────────────────
+/nvram          emmc    /dev/block/by-name/nvram             flags=display="NVRam";backup=1;flashimg=1
+/proinfo        emmc    /dev/block/by-name/proinfo           flags=display="Proinfo";backup=1;flashimg=1
+/tee1           emmc    /dev/block/by-name/tee1              flags=display="TEE1";backup=1;flashimg=1
+/tee2           emmc    /dev/block/by-name/tee2              flags=display="TEE2";backup=1;flashimg=1
+/logo           emmc    /dev/block/by-name/logo              flags=display="Logo";backup=1;flashimg=1
+/seccfg         emmc    /dev/block/by-name/seccfg            flags=display="Seccfg";backup=1;flashimg=1
+/expdb          emmc    /dev/block/by-name/expdb             flags=display="Expdb"
+/frp            emmc    /dev/block/by-name/frp               flags=display="FRP";backup=1
+
+# ── Vbmeta ───────────────────────────────────────────────────────────────────
+/vbmeta         emmc    /dev/block/by-name/vbmeta            flags=display="Vbmeta";backup=1;flashimg=1
+/vbmeta_system  emmc    /dev/block/by-name/vbmeta_system     flags=slotselect;display="Vbmeta System";backup=1;flashimg=1
+/vbmeta_vendor  emmc    /dev/block/by-name/vbmeta_vendor     flags=slotselect;display="Vbmeta Vendor";backup=1;flashimg=1
+
+# ── External storage ─────────────────────────────────────────────────────────
 /sdcard1        vfat    /dev/block/mmcblk1p1                 flags=display="MicroSD";storage;wipeingui;removable;fsflags="utf8"
-/usb-otg        vfat    /dev/block/sda1                      flags=display="USB-OTG";storage;wipeingui;removable
+/usb-otg        vfat    /dev/block/sda1                      flags=display="USB OTG";storage;wipeingui;removable
