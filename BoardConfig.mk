@@ -33,8 +33,7 @@ TARGET_PREBUILT_KERNEL                := $(LOCAL_PATH)/prebuilt/kernel
 TARGET_PREBUILT_DTB                   := $(LOCAL_PATH)/prebuilt/dtb.img   # [VERIFY] may be inside boot.img
 BOARD_PREBUILT_DTBOIMAGE              := $(LOCAL_PATH)/prebuilt/dtbo.img  # [VERIFY]
 
-BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 \
-                        androidboot.selinux=permissive
+BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2 buildvariant=user
 
 BOARD_KERNEL_BASE          := 0x40000000
 BOARD_KERNEL_PAGESIZE      := 2048
@@ -44,14 +43,17 @@ BOARD_KERNEL_SECOND_OFFSET := 0x00f00000
 BOARD_KERNEL_TAGS_OFFSET   := 0x07880000
 BOARD_DTB_OFFSET           := 0x07880000
 
-# [VERIFY] these with magiskboot unpack output:
-BOARD_KERNEL_IMAGE_NAME    := Image.gz
+# Confirmed from: magiskboot unpack -h boot.img
+BOARD_KERNEL_IMAGE_NAME    := Image.gz   # KERNEL_FMT=gzip → Image.gz
 
-BOARD_BOOTIMG_HEADER_VERSION := 2
+BOARD_BOOTIMG_HEADER_VERSION := 2        # HEADER_VER=2 confirmed
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOTIMG_HEADER_VERSION)
 BOARD_MKBOOTIMG_ARGS += --ramdisk_offset $(BOARD_RAMDISK_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --tags_offset $(BOARD_KERNEL_TAGS_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --dtb_offset $(BOARD_DTB_OFFSET)
+BOARD_MKBOOTIMG_ARGS += --board "CY-BF7-H6127"
+BOARD_MKBOOTIMG_ARGS += --os_version 12.0.0
+BOARD_MKBOOTIMG_ARGS += --os_patch_level 2024-06
 
 # ─── Partitions ─────────────────────────────────────────────────────────────
 # [VERIFY] sizes with: adb shell cat /proc/partitions  OR  blockdev --getsize64 /dev/block/...
@@ -59,7 +61,8 @@ BOARD_FLASH_BLOCK_SIZE           := 131072          # 128KB (pagesize * 64)
 
 # A/B (Virtual A/B on MT6761 Android 12 may still use legacy A/B — confirm below)
 AB_OTA_UPDATER      := true
-AB_OTA_PARTITIONS   := boot vendor_boot system vendor product odm
+AB_OTA_PARTITIONS   := boot system vendor product odm
+# vendor_boot removed — HEADER_VER=2 confirms non-GKI kernel, no vendor_boot partition
 
 # Dynamic partitions (Android 12 almost certainly uses this)
 BOARD_SUPER_PARTITION_SIZE            := 3221225472  # [VERIFY] typically 3 GiB on BF7
@@ -67,10 +70,13 @@ BOARD_SUPER_PARTITION_GROUPS          := main
 BOARD_MAIN_SIZE                       := 3217031168  # super - 4MB overhead
 BOARD_MAIN_PARTITION_LIST             := system vendor product odm
 
-# Boot / vendor_boot
-BOARD_BOOT_HEADER_VERSION   := 4  # [VERIFY] — Android 12 GKI uses v4; legacy may use v2
-BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 0x06000000  # 96 MiB [VERIFY]
-BOARD_BOOTIMAGE_PARTITION_SIZE        := 0x02000000  # 32 MiB [VERIFY]
+# Boot sizes
+# Confirmed: KERNEL_SZ=11884933 + RAMDISK_SZ=13413543 + DTB_SZ=121231 + headers ≈ 25.5 MB
+# Stock boot.img on disk = ~34 MB (includes padding to page boundaries)
+# Set to 0x06000000 (96 MiB) to be safe — [VERIFY] real size:
+#   adb shell blockdev --getsize64 /dev/block/by-name/boot
+BOARD_BOOTIMAGE_PARTITION_SIZE        := 0x06000000  # 96 MiB — [VERIFY]
+# No vendor_boot on HEADER_VER=2 (non-GKI) — remove vendor_boot from AB_OTA_PARTITIONS if confirmed
 
 # ─── Recovery ───────────────────────────────────────────────────────────────
 # Ramdisk is in vendor_boot on GKI devices; set accordingly
@@ -120,6 +126,10 @@ TW_HAS_MTP                 := true
 TWRP_INCLUDE_LOGCAT        := true
 TARGET_USES_LOGD           := true
 
+# ─── System prop overrides ───────────────────────────────────────────────────
+# Confirmed from boot header: OS_VERSION=12.0.0, OS_PATCH_LEVEL=2024-06
+TW_OVERRIDE_SYSTEM_PROPS := "ro.build.version.release=12;ro.build.version.sdk=31"
+
 # ─── Vendor / MTK blobs ─────────────────────────────────────────────────────
-# If decrypt doesn't work, you may need TEE/Trustonic blobs from stock
-# TW_OVERRIDE_SYSTEM_PROPS  := "ro.build.version.release=12;ro.build.version.sdk=31"
+# If decrypt doesn't work, you may need TEE/Trustonic blobs from stock vendor
+# Pull: libteec.so, libMcClient.so, mcDriverDaemon from /vendor/lib64/ and /vendor/bin/
