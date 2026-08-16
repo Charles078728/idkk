@@ -3,7 +3,7 @@
 # SoC  : MediaTek MT6761 (Helio A22)
 # TWRP device tree — fill in values marked [VERIFY] from your stock firmware
 
-LOCAL_PATH := device/tecno/TECNO-BF7
+LOCAL_PATH := device/tecno/BF7
 
 # ─── Architecture ───────────────────────────────────────────────────────────
 TARGET_ARCH         := arm64
@@ -19,7 +19,7 @@ TARGET_2ND_CPU_ABI2     := armeabi
 TARGET_2ND_CPU_VARIANT  := cortex-a53
 
 # ─── Bootloader ─────────────────────────────────────────────────────────────
-TARGET_BOOTLOADER_BOARD_NAME := mt6761
+TARGET_BOOTLOADER_BOARD_NAME := CY-BF7-H6127
 TARGET_NO_BOOTLOADER         := true
 
 # ─── Platform ───────────────────────────────────────────────────────────────
@@ -65,10 +65,10 @@ AB_OTA_PARTITIONS   := boot system vendor product odm
 # vendor_boot removed — HEADER_VER=2 confirms non-GKI kernel, no vendor_boot partition
 
 # Dynamic partitions (Android 12 almost certainly uses this)
-BOARD_SUPER_PARTITION_SIZE            := 3221225472  # [VERIFY] typically 3 GiB on BF7
+BOARD_SUPER_PARTITION_SIZE            := 9126805504   # [VERIFY] typically 3 GiB on BF7
 BOARD_SUPER_PARTITION_GROUPS          := main
-BOARD_MAIN_SIZE                       := 3217031168  # super - 4MB overhead
-BOARD_MAIN_PARTITION_LIST             := system vendor product odm
+BOARD_MAIN_SIZE                       := 9122611200  # super - 4MB overhead
+BOARD_MAIN_PARTITION_LIST             := system vendor product system_ext
 
 # Boot sizes
 # Confirmed: KERNEL_SZ=11884933 + RAMDISK_SZ=13413543 + DTB_SZ=121231 + headers ≈ 25.5 MB
