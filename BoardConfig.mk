@@ -75,6 +75,7 @@ BOARD_BOOTIMAGE_PARTITION_SIZE        := 33554432  # 96 MiB — [VERIFY]
 # Ramdisk is in vendor_boot on GKI devices; set accordingly
 TARGET_RECOVERY_FSTAB           := $(LOCAL_PATH)/recovery/root/system/etc/recovery.fstab
 BOARD_USES_RECOVERY_AS_BOOT     := true  # [VERIFY] — true if no separate recovery partition
+TARGET_NO_RECOVERY          := true
 
 # ─── File system ────────────────────────────────────────────────────────────
 BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := f2fs
