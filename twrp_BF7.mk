@@ -2,6 +2,9 @@
 
 # Inherit from TWRP base
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
+
+
 $(call inherit-product, vendor/twrp/config/common.mk)
 # Inherit from TECNO-BF7 device
 $(call inherit-product, device/tecno/BF7/device.mk)
