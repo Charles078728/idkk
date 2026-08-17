@@ -2,6 +2,12 @@
 # Explicitly pull in A/B OTA tools
 AB_OTA_UPDATER := true
 
+AB_OTA_POSTINSTALL_CONFIG += \
+    RUN_POSTINSTALL_system=true \
+    POSTINSTALL_PATH_system=system/bin/otapreopt_script \
+    FILESYSTEM_TYPE_system=ext4 \
+    POSTINSTALL_OPTIONAL_system=true
+
 PRODUCT_PACKAGES += \
     android.hardware.keymaster@4.1-service.trustonic \
     bootctrl.mt6761 \
@@ -21,4 +27,9 @@ PRODUCT_PACKAGES += \
 
 # fastbootd (for dynamic partition flashing from recovery)
 PRODUCT_PACKAGES += \
-    fastbootd
+    fastbootd \
+    otapreopt_script \
+    cppreopts.sh \
+    update_engine \
+    update_verifier \
+    update_engine_sideload
