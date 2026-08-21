@@ -2,7 +2,10 @@ import /init.recovery.trustonic.rc
 
 on init
     setprop sys.usb.configfs 1
+    setprop sys.usb.ffs.aio_compat 1
     export LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/hw:/system/lib64/hw
+    mkdir /mnt/vendor/persist 0771 system system
+    setprop sys.usb.controller "musb-hdrc"
 
 on fs
     # distinguish USB should connect or not, i.e. CDP vs SDP
