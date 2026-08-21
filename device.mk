@@ -1,6 +1,10 @@
 
-# Explicitly pull in A/B OTA tools
-AB_OTA_UPDATER := true
+# Explicitly pull in A/B OTA 
+
+LOCAL_PATH := device/tecno/BF7
+
+PRODUCT_USE_DYNAMIC_PARTITIONS := true
+
 
 AB_OTA_POSTINSTALL_CONFIG += \
     RUN_POSTINSTALL_system=true \
@@ -13,14 +17,15 @@ PRODUCT_PACKAGES += \
     bootctrl.mt6761 \
     bootctrl.mt6761.recovery \
     android.hardware.boot@1.2-impl \
-    android.hardware.boot@1.2-service \
-    android.hardware.boot@1.2-impl.recovery \
+    android.hardware.boot@1.0-service \
+    android.hardware.boot@1.0-impl.recovery \
     vendor.trustonic.tee@1.1-service \
     vendor.mediatek.hardware.keymaster_attestation@1.1-service
 
 
 # F2FS tools
 PRODUCT_PACKAGES += \
+    bootctrl \
     sg_write_buffer \
     f2fs_io \
     check_f2fs
