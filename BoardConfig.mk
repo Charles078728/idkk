@@ -111,7 +111,6 @@ BOARD_USES_METADATA_PARTITION := true
 
 # USB
 TW_USE_TOOLBOX              := true
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /config/usb_gadget/g1/functions/mass_storage.%d/lun
 
 # MTP
 TW_HAS_MTP                 := true
