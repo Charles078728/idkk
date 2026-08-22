@@ -43,14 +43,12 @@ TARGET_NO_BOOTLOADER         := true
 
 # ─── Platform ───────────────────────────────────────────────────────────────
 TARGET_BOARD_PLATFORM         := mt6761
-TARGET_BOARD_PLATFORM_GPU     := mali-g52
 
 # ─── Kernel (prebuilt) ──────────────────────────────────────────────────────
 # Extract from stock boot.img with: magiskboot unpack boot.img
 # Then copy kernel → prebuilt/kernel
 TARGET_PREBUILT_KERNEL                := $(DEVICE_PATH)/prebuilt/kernel
 TARGET_PREBUILT_DTB                   := $(DEVICE_PATH)/prebuilt/dtb.img   # [VERIFY] may be inside boot.img
-BOARD_PREBUILT_DTBOIMAGE              := $(DEVICE_PATH)/prebuilt/dtbo.img  # [VERIFY]
 
 BOARD_KERNEL_CMDLINE := bootopt=64S3,32N2,64N2
 
@@ -62,7 +60,7 @@ BOARD_KERNEL_TAGS_OFFSET   := 0x07808000
 BOARD_DTB_OFFSET           := 0x07808000
 
 # Confirmed from: magiskboot unpack -h boot.img
-BOARD_KERNEL_IMAGE_NAME    := Image.gz   # KERNEL_FMT=gzip → Image.gz
+BOARD_KERNEL_IMAGE_NAME    := Image  # KERNEL_FMT=gzip → Image.gz
 
 BOARD_BOOTIMG_HEADER_VERSION := 2        # HEADER_VER=2 confirmed
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOTIMG_HEADER_VERSION)
