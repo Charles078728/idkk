@@ -16,7 +16,7 @@ PRODUCT_PACKAGES += \
     android.hardware.keymaster@4.1-service.trustonic \
     bootctrl.mt6761 \
     bootctrl.mt6761.recovery \
-    android.hardware.boot@1.2-impl \
+    android.hardware.boot@1.0-impl \
     android.hardware.boot@1.0-service \
     android.hardware.boot@1.0-impl.recovery \
     vendor.trustonic.tee@1.1-service \
